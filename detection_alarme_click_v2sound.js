@@ -1,5 +1,5 @@
 ﻿/******************************* 
- * Detection_Alarme_Click v2sound Test *
+ * Detection_Alarme_Click Test *
  *******************************/
 
 import { core, data, sound, util, visual, hardware } from './lib/psychojs-2022.2.5.js';
@@ -66,9 +66,7 @@ psychoJS.start({
     {'name': 'green.png', 'path': 'green.png'},
     {'name': 'red.png', 'path': 'red.png'},
     {'name': 'conditions.xlsx', 'path': 'conditions.xlsx'},
-    {'name': 'orange.png', 'path': 'orange.png'},
-	{'name': 'beep.wav', 'path': 'beep.wav'},
-    {'name': 'silent.wav', 'path': 'silent.wav'}
+    {'name': 'orange.png', 'path': 'orange.png'}
   ]
 });
 
@@ -110,7 +108,6 @@ var mouse_resp_welcome;
 var trialClock;
 var image;
 var mouse_resp;
-var sound_1;			
 var endClock;
 var text_end;
 var msg;
@@ -124,7 +121,8 @@ async function experimentInit() {
   text_welcome = new visual.TextStim({
     win: psychoJS.window,
     name: 'text_welcome',
-    text: "Bienvenue dans la tâche de détection d'alarme.\n\n- quand l'alarme est orange, elle sonnera : regarder l'écran le plus vite possible et dites « okay » ou « vu »\n\n- quand l'alarme est rouge, elle sonnera : appuyer sur la gachette gauche le plus vite possible\n\nAppuyer sur la gachette gauche pour commencer. ",
+    text: "Bienvenue dans la tâche de détection d'alarme.\n\n- quand l'alarme est orange : regarder l'écran le plus vite possible et dites « okay » ou « vu »\n\n- quand l'alarme est rouge : appuyer sur la gachette gauche le plus vite possible\n\nAppuyer sur la gachette gauche pour commencer. ",
+    font: 'Open Sans',
     units: undefined, 
     pos: [0, 0], height: 0.05,  wrapWidth: undefined, ori: 0.0,
     languageStyle: 'LTR',
@@ -151,12 +149,6 @@ async function experimentInit() {
     win: psychoJS.window,
   });
   mouse_resp.mouseClock = new util.Clock();
-  sound_1 = new sound.Sound({
-    win: psychoJS.window,
-    value: 'A',
-    secs: (- 1),
-    });
-  sound_1.setVolume(1.0);							 					 
   // Initialize components for Routine "end"
   endClock = new util.Clock();
   text_end = new visual.TextStim({
@@ -427,12 +419,6 @@ function trialRoutineBegin(snapshot) {
     mouse_resp.rightButton = [];
     mouse_resp.time = [];
     gotValidClick = false; // until a click is received
-    sound_1 = new sound.Sound({
-    win: psychoJS.window,
-    value: thissound,
-    secs: -1,
-    });
-    sound_1.setVolume(1.0);							   					   
     // keep track of which components have finished
     trialComponents = [];
     trialComponents.push(image);
@@ -506,19 +492,6 @@ function trialRoutineEachFrame() {
         }
       }
     }
-    // start/stop sound_1
-    if (t >= 0.0 && sound_1.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      sound_1.tStart = t;  // (not accounting for frame time here)
-      sound_1.frameNStart = frameN;  // exact frame index
-      
-      sound_1.play();  // start the sound (it finishes automatically)
-      sound_1.status = PsychoJS.Status.STARTED;
-    }
-    if (t >= (sound_1.getDuration() + sound_1.tStart)     && sound_1.status === PsychoJS.Status.STARTED) {
-      sound_1.stop();  // stop the sound (if longer than duration)
-      sound_1.status = PsychoJS.Status.FINISHED;
-    }						 
     // check for quit (typically the Esc key)
     if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
@@ -564,7 +537,6 @@ function trialRoutineEnd(snapshot) {
     psychoJS.experiment.addData('mouse_resp.time', mouse_resp.time);
 	psychoJS.experiment.addData('mouse_resp.corr', mouse_resp.corr);
     
-    sound_1.stop();  // ensure sound has stopped at end of routine																  
     // the Routine "trial" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset();
     
